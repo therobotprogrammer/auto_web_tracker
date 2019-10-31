@@ -55,7 +55,7 @@ class UrlCapture:
 
 
         
-    def capture(self, url, location, window_size = 'default', delay = 20):
+    def capture(self, url, location, window_size = 'default', delay = 0):
         
         if os.path.isdir(self.cookies_dir):
             shutil.rmtree(self.cookies_dir, ignore_errors=True)

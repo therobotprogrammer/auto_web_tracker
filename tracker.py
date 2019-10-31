@@ -29,7 +29,6 @@ import tldextract
 image_format = '.png'
 
 
-delay = 3
 
 
 def add_if_new(new_img, img_list = []):
@@ -68,7 +67,7 @@ def print_to_dir(image_dict, output_dir):
             cv2.imwrite(filename + '_' + str(count), image )
             count = count+1
         
-    print('done')
+    print('done printing to dict')
     
     
     
@@ -149,8 +148,8 @@ baseline_images_dir = os.path.join(work_dir, 'baseline_images')
 #urls_df.to_csv(os.path.join(work_dir , 'urls_to_track.csv') )
 
 
-#urls_df = pd.read_csv(os.path.join(work_dir , 'urls_to_track.csv'), usecols = ['url', 'description', 'window_width', 'window_height'])
-urls_df = pd.read_csv(os.path.join(work_dir , 'test.csv'), usecols = ['url', 'description', 'window_width', 'window_height'])
+urls_df = pd.read_csv(os.path.join(work_dir , 'urls_to_track.csv'), usecols = ['url', 'description', 'window_width', 'window_height'])
+#urls_df = pd.read_csv(os.path.join(work_dir , 'test.csv'), usecols = ['url', 'description', 'window_width', 'window_height'])
 
 urls_df.set_index('url', drop = True, inplace=True)
 
@@ -196,7 +195,10 @@ snapper = UrlCapture()
 urls = list(urls_df.index)
 urls_subset_for_cookies = get_one_url_per_domain(urls)
 
-snapper.set_cookies(urls_subset_for_cookies,  timeout = 30)
+
+delay = 20
+
+snapper.set_cookies(urls_subset_for_cookies,  timeout = 40)
 
 
 
@@ -213,12 +215,14 @@ baseline_image_dict = {}
 
 temp_file = os.path.join(scratch_dir, 'temp' + image_format)
 
-max_variations = 1
+max_variations = 10
 
 
 
 snapper.headless = True
 
+
+print('Adding variations')
 
 for variation in range(0, max_variations):
     for url, row in urls_df.iterrows():        
@@ -249,6 +253,7 @@ for variation in range(0, max_variations):
         if change_detected_flag:
             print('Baseline variation detected in URL >>> ' , url)
         
+    print(variation)
     time.sleep(5)
 
 
@@ -258,6 +263,8 @@ for variation in range(0, max_variations):
 print_to_dir(baseline_image_dict, baseline_images_dir)
 
 
+
+print('started while loop')
 
 while(1):
     temp_file = os.path.join(scratch_dir, 'temp' + image_format)
