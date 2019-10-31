@@ -13,7 +13,7 @@ import os
 import shutil 
 import pickle
 import tldextract
-
+import cv2
 
 
 class UrlCapture:
@@ -55,7 +55,7 @@ class UrlCapture:
 
 
         
-    def capture(self, url, location, window_size = 'default', delay = 20.0):
+    def capture(self, url, location, window_size = 'default', delay = 20):
         
         if os.path.isdir(self.cookies_dir):
             shutil.rmtree(self.cookies_dir, ignore_errors=True)
@@ -106,6 +106,26 @@ class UrlCapture:
         time.sleep(delay)
         driver.get(url)
         driver.save_screenshot(location)
+        
+
+        # tod do: clean this
+        
+    
+        imageA = cv2.imread(location)
+        
+        h = imageA.shape[0]
+        w = imageA.shape[1]
+        
+        new_h_start = (int)(.25*h)
+        new_h_end = (int)(1*h)
+    
+        new_w_start = (int)(0*w)
+        new_w_end = (int)(.9*w)
+        
+        imageA = imageA[new_h_start:new_h_end, new_w_start:new_w_end]
+
+        cv2.imwrite(location, imageA)
+
 
         driver.quit()
         driver = None

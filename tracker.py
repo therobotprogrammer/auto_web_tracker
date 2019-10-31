@@ -29,6 +29,9 @@ import tldextract
 image_format = '.png'
 
 
+delay = 3
+
+
 def add_if_new(new_img, img_list = []):
     change_detected_flag = False
 
@@ -227,9 +230,9 @@ for variation in range(0, max_variations):
         h = row['window_height']
         
         if math.isnan(w)   or  math.isnan(h)  :
-            snapper.capture(url, temp_file, delay = 3)
+            snapper.capture(url, temp_file, delay = delay)
         else:
-            snapper.capture(url, temp_file, window_size = (int(w) ,int(h)), delay = 3)
+            snapper.capture(url, temp_file, window_size = (int(w) ,int(h)), delay = delay)
             
 
             
@@ -269,9 +272,9 @@ while(1):
             h = row['window_height']
             
             if math.isnan(w)   or  math.isnan(h)  :
-                snapper.capture(url, temp_file)
+                snapper.capture(url, temp_file, delay = delay)
             else:
-                snapper.capture(url, temp_file, window_size = (int(w) ,int(h)))
+                snapper.capture(url, temp_file, window_size = (int(w) ,int(h)), dalay = delay)
                 
 
                 
