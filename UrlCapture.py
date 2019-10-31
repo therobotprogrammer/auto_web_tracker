@@ -99,6 +99,8 @@ class UrlCapture:
 #                driver.get(domain_in_cookie)
                 driver.get(url)
                 
+                if 'expiry' in cookie:
+                    del cookie['expiry']
                 driver.add_cookie(cookie)
 
         time.sleep(delay)

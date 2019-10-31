@@ -146,8 +146,8 @@ baseline_images_dir = os.path.join(work_dir, 'baseline_images')
 #urls_df.to_csv(os.path.join(work_dir , 'urls_to_track.csv') )
 
 
-urls_df = pd.read_csv(os.path.join(work_dir , 'urls_to_track.csv'), usecols = ['url', 'description', 'window_width', 'window_height'])
-#urls_df = pd.read_csv(os.path.join(work_dir , 'test.csv'), usecols = ['url', 'description', 'window_width', 'window_height'])
+#urls_df = pd.read_csv(os.path.join(work_dir , 'urls_to_track.csv'), usecols = ['url', 'description', 'window_width', 'window_height'])
+urls_df = pd.read_csv(os.path.join(work_dir , 'test.csv'), usecols = ['url', 'description', 'window_width', 'window_height'])
 
 urls_df.set_index('url', drop = True, inplace=True)
 
