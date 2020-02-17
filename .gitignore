@@ -1,0 +1,10 @@
+
+cookies/Default/
+
+__pycache__/
+
+cookies/
+
+baseline_images/
+
+*.png
