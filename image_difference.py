@@ -28,7 +28,7 @@ def blur(img_in, kernel_size = 3):
 
 
 
-def get_diff_image(imageA_original, imageB_original):
+def get_diff_image(imageA_original, imageB_original, loc = '/media/pt/ramdisk/debug_images'):   
     
     imageA = imageA_original.copy()
     imageB = imageB_original.copy()
@@ -60,7 +60,9 @@ def get_diff_image(imageA_original, imageB_original):
 
 
 #    loc = '/home/pt/Documents/ultimate_tracker/debug_images'
-    loc = '/media/pt/ramdisk/debug_images'
+    
+    if not os.path.isdir(loc):
+        os.makedirs(loc)
 
     
 
@@ -117,10 +119,12 @@ def get_diff_image(imageA_original, imageB_original):
     
     
     
+    #To Do: Change score if getting false positives.
     
     # open the file with opencv
-    if cv2.countNonZero(thresh) == 0 or score > .99 :
-#        print("No change")    
+    if cv2.countNonZero(thresh) == 0 or score == 1.0 :
+#        print("No change")   
+        print(">>>Non Zero: ", cv2.countNonZero(thresh) )
         return None
         
     else:

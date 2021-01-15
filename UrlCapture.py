@@ -17,7 +17,7 @@ import cv2
 
 
 class UrlCapture:
-    def __init__(self, delete_previous_cookies = False, window_size = (1920,1080), headless = True):
+    def __init__(self, delete_previous_cookies = False, window_size = (1920,1080), headless = True, cut_borders = False):
         self.cookies_dir = os.path.join( os.getcwd() , 'cookies')
         self.cookies_pkl_file = os.path.join( os.getcwd() , 'cookies_pkl')
 
@@ -32,6 +32,8 @@ class UrlCapture:
         
         self.headless = headless
 
+        self.cut_borders = cut_borders
+        
 #        self.driver = None
 
 
@@ -103,28 +105,32 @@ class UrlCapture:
                     del cookie['expiry']
                 driver.add_cookie(cookie)
 
-        time.sleep(delay)
         driver.get(url)
+        time.sleep(delay)
         driver.save_screenshot(location)
         
 
-        # tod do: clean this
         
     
-        imageA = cv2.imread(location)
-        
-        h = imageA.shape[0]
-        w = imageA.shape[1]
-        
-        new_h_start = (int)(.25*h)
-        new_h_end = (int)(1*h)
-    
-        new_w_start = (int)(0*w)
-        new_w_end = (int)(.9*w)
-        
-        imageA = imageA[new_h_start:new_h_end, new_w_start:new_w_end]
 
-        cv2.imwrite(location, imageA)
+        
+        # Cut borders
+
+        if self.cut_borders:
+        # tod do: clean this
+
+            imageA = cv2.imread(location)
+            
+            h = imageA.shape[0]
+            w = imageA.shape[1]
+            new_h_start = (int)(.25*h)
+            new_h_end = (int)(1*h)        
+            new_w_start = (int)(0*w)
+            new_w_end = (int)(.9*w)
+            
+            imageA = imageA[new_h_start:new_h_end, new_w_start:new_w_end]
+
+            cv2.imwrite(location, imageA)
 
 
         driver.quit()
@@ -135,14 +141,20 @@ class UrlCapture:
 
 
 if __name__ == '__main__':
-    snapper = UrlCapture(window_size = (1920,630), headless = False)
+    snapper = UrlCapture(window_size = (1920,1080), headless = False)
     
-    urls = ['https://www.amazon.com/gp/product/B07K3ZHM3V?pf_rd_p=183f5289-9dc0-416f-942e-e8f213ef368b&pf_rd_r=M0EHQ153B2FYH9CEGYZ9']
+    urls = ['https://www.cowin.gov.in/']
     snapper.set_cookies(urls, timeout = 3)
     
-    snapper.capture('https://www.apple.com/', 'test.png')
+    w = 1920
+    h= 1080
     
-    time.sleep(3)  # Time to enter credentials
+    snapper.capture(urls[0], 'test.png', window_size = (w,h), delay = 3)
+
+    
+#    snapper.capture('https://www.cowin.gov.in/', 'test.png')
+    
+#    time.sleep(3)  # Time to enter credentials
 
 
 #driver.get('http://www.google.com/');

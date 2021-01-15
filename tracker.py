@@ -25,6 +25,10 @@ import time
 import math
 
 import tldextract
+import pygame
+from datetime import datetime
+
+debug = False
 
 image_format = '.png'
 
@@ -66,8 +70,11 @@ def print_to_dir(image_dict, output_dir):
         for image in list_of_images:              
             cv2.imwrite(filename + '_' + str(count), image )
             count = count+1
-        
-    print('done printing to dict')
+            
+    now = datetime.now()    
+    current_time = now.strftime("%H:%M:%S")
+    
+    print('done printing to dict at ' + current_time)
     
     
     
@@ -88,7 +95,7 @@ def create_file_name(directory, url):
     
     
     
-    
+   
 
 
 
@@ -99,53 +106,6 @@ scratch_dir = '/media/pt/ramdisk/auto_web_tracker'
 changed_images_folder = os.path.join(work_dir, 'changed_images')
 baseline_images_dir = os.path.join(work_dir, 'baseline_images')    
 
-
-
-
-#urls = [    'https://www.apple.com/'    ]
-
-#url_itemname_dict = {               
-#            'https://www.bestbuy.com/site/apple-refurbished-12-9-inch-ipad-pro-256gb-silver/5665301.p?skuId=5665301' : 'iPad (Refurb) 256GB',            
-#            'https://www.bestbuy.com/site/apple-ipad-pro-12-9-inch-2nd-generation-with-wi-fi-cellular-512-gb-silver/5505700.p?skuId=5505700' : '2017 iPad 512GB Silver - BestBuy',
-#            'https://www.bestbuy.com/site/apple-ipad-pro-12-9-inch-2nd-generation-with-wi-fi-cellular-512-gb-gold/5505701.p?skuId=5505701': '2017 iPad 512GB Silver - BestBuy',
-#            
-#            
-#            'https://www.bestbuy.com/site/apple-ipad-pro-12-9-inch-2nd-generation-with-wi-fi-cellular-256-gb-space-gray/9079049.p?skuId=9079049': 'iPad 256 Gray - Bestbuy',
-#            'https://www.bestbuy.com/site/apple-ipad-pro-12-9-inch-2nd-generation-with-wi-fi-cellular-256-gb-silver/5502100.p?skuId=5502100': 'iPad 256 Silver - BestBuy',
-#            'https://www.bestbuy.com/site/apple-12-9-inch-ipad-pro-latest-model-with-wi-fi-cellular-512gb-space-gray/4905101.p?skuId=4905101': 'iPad 512 Silver - BestBuy',
-#            'https://www.bestbuy.com/site/apple-12-9-inch-ipad-pro-latest-model-with-wi-fi-cellular-512gb-silver/4905500.p?skuId=4905500': 'iPad 512 Gray - BestBuy',
-#            'https://www.bestbuy.com/site/apple-12-9-inch-ipad-pro-latest-model-with-wi-fi-cellular-1tb-space-gray/4905600.p?skuId=4905600' : 'iPad 1TB - BestBuy',
-#            'https://www.bestbuy.com/site/apple-12-9-inch-ipad-pro-latest-model-with-wi-fi-cellular-1tb-silver/4905700.p?skuId=4905700': 'iPad 1TB - BestBuy',
-#
-#
-#            'https://www.amazon.com/dp/B07K3ZHM3V/ref=cm_sw_r_tw_dp_U_x_yJvUDb5BG19RV?th=1' : 'iPad 256 Gray - Amazon',
-#            'https://www.amazon.com/dp/B07K3ZM47N/ref=cm_sw_r_tw_dp_U_x_yJvUDb5BG19RV?th=1' : 'iPad 256 Silver - Amazon',
-#            'https://www.amazon.com/dp/B07K3B4NBH/ref=cm_sw_r_tw_dp_U_x_yJvUDb5BG19RV' : 'iPad 512 Gray - Amazon',
-#            'https://www.amazon.com/dp/B07K438MJV/ref=cm_sw_r_tw_dp_U_x_FKvUDbBW115H9 ' : 'iPad 512 Silver - Amazon',
-#            'https://www.amazon.com/dp/B07K344LR9/ref=cm_sw_r_tw_dp_U_x_BZvUDbV7ASB1K' : 'iPad 1TB Gray - Amazon',
-#            'https://www.amazon.com/dp/B07K3BZSN3/ref=cm_sw_r_tw_dp_U_x_Q0vUDb4R8A95BK' : 'iPad 1TB Silver - Amazon',
-#            
-#            
-#            'https://www.walmart.com/ip/Apple-12-9-inch-iPad-Pro-2018-Wi-Fi-Cellular-256GB-Silver/356659182?selected=true' : 'iPad 256 Silver ',
-#            'https://www.walmart.com/ip/Apple-12-9-inch-iPad-Pro-2018-Wi-Fi-Cellular-256GB/507838389?selected=true' : 'iPad 256 Gray',
-#            'https://www.walmart.com/ip/Apple-12-9-inch-iPad-Pro-2018-Wi-Fi-Cellular-512GB-Silver/174902580?selected=true' : 'iPad 512 Silver',
-#            'https://www.walmart.com/ip/Apple-12-9-inch-iPad-Pro-2018-Wi-Fi-Cellular-512GB/221098689?selected=true' : 'iPad 512 Black',
-#            
-#            'https://www.walmart.com/ip/Apple-12-9-inch-iPad-Pro-2018-1TB-WiFi-Cellular-Silver/688634941?selected=true' : 'iPad 1Tb Silver',
-#            'https://www.walmart.com/ip/Apple-12-9-inch-iPad-Pro-2018-1TB-WiFi-Cellular/965075552?selected=true' : 'iPad 1Tb Gray',
-#            
-#            'https://www.bhphotovideo.com/c/product/1441852-REG/apple_mtj02ll_a_12_9_ipad_pro_late.html': 'iPad',
-#            'https://www.bhphotovideo.com/c/product/1441853-REG/apple_mtja2ll_a_12_9_ipad_pro_late.html': 'iPad',
-#            'https://www.bhphotovideo.com/c/product/1441855-REG/apple_mtjn2ll_a_12_9_ipad_pro_late.html': 'iPad',
-#            'https://www.bhphotovideo.com/c/product/1441854-REG/apple_mtjh2ll_a_12_9_ipad_pro_late.html': 'iPad',
-#            'https://www.bhphotovideo.com/c/product/1441856-REG/apple_mtju2ll_a_12_9_ipad_pro_late.html': 'iPad',
-#            'https://www.bhphotovideo.com/c/product/1441857-REG/apple_mtl02ll_a_12_9_ipad_pro_late.html': 'iPad',   
-#            'https://www.bhphotovideo.com/c/product/1342553-REG/apple_mpll2ll_a_12_9_ipad_pro_mid.html' : 'iPad 2017 - B&H'
-#
-#        }
-#
-#urls_df = pd.DataFrame.from_dict(url_itemname_dict,  orient = 'index', columns = ['description'])
-#urls_df.to_csv(os.path.join(work_dir , 'urls_to_track.csv') )
 
 
 urls_df = pd.read_csv(os.path.join(work_dir , 'urls_to_track.csv'), usecols = ['url', 'description', 'window_width', 'window_height'])
@@ -190,17 +150,21 @@ def get_one_url_per_domain(urls):
 
 
 postman = SendMail()
+
+if not debug:
+    postman.send('trackerbot2020@gmail.com', subject = 'Test Mail from tracker', body = 'Test mail')
+
+
 snapper = UrlCapture()
 
 urls = list(urls_df.index)
 urls_subset_for_cookies = get_one_url_per_domain(urls)
 
 
-delay = 20
+delay = 5
+timeout_to_manually_activate_cookies = 1
 
-snapper.set_cookies(urls_subset_for_cookies,  timeout = 40)
-
-
+snapper.set_cookies(urls_subset_for_cookies,  timeout = timeout_to_manually_activate_cookies)
 
 
 
@@ -215,8 +179,11 @@ baseline_image_dict = {}
 
 temp_file = os.path.join(scratch_dir, 'temp' + image_format)
 
-max_variations = 10
-
+if debug:
+    max_variations = 3
+else:
+    max_variations = 10
+    
 
 
 snapper.headless = True
@@ -231,7 +198,8 @@ for variation in range(0, max_variations):
 #        print(url)
 #        imgkit.from_url(url, temp_file)        
         w = row['window_width']
-        h = row['window_height']
+        h = row['window_height']        
+        
         
         if math.isnan(w)   or  math.isnan(h)  :
             snapper.capture(url, temp_file, delay = delay)
@@ -254,7 +222,11 @@ for variation in range(0, max_variations):
             print('Baseline variation detected in URL >>> ' , url)
         
     print(variation)
-    time.sleep(5)
+    
+    if debug:
+        continue
+    else:
+        time.sleep(1)
 
 
 
@@ -281,13 +253,15 @@ while(1):
             if math.isnan(w)   or  math.isnan(h)  :
                 snapper.capture(url, temp_file, delay = delay)
             else:
-                snapper.capture(url, temp_file, window_size = (int(w) ,int(h)), dalay = delay)
+                snapper.capture(url, temp_file, window_size = (int(w) ,int(h)), delay = delay)
                 
 
                 
 
         except:
             continue
+        
+#        time.sleep(5)
         
         new_img = cv2.imread(temp_file)     
         
@@ -317,6 +291,11 @@ while(1):
                     filename = create_file_name(changed_images_folder, url)  
                     
                     if type(diff) is not str:
+                        pygame.mixer.init()
+                        pygame.mixer.music.load("ringtone.mp3")
+                        pygame.mixer.music.play(-1)
+                        
+                        
                         cv2.imwrite(filename, diff)
     
                         ext = tldextract.extract(url)
@@ -335,7 +314,10 @@ while(1):
     os.makedirs(updated_baselines_dir)
     print_to_dir(baseline_image_dict, os.path.join(scratch_dir, 'updated_baselines') )
 
-    time.sleep(60)                
+    if debug :  
+        continue
+    else:
+        time.sleep(60)                
         
 
 
