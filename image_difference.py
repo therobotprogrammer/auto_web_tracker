@@ -85,6 +85,11 @@ def get_diff_image(imageA_original, imageB_original, loc = '/media/pt/ramdisk/de
     # compute the Structural Similarity Index (SSIM) between the two
     # images, ensuring that the difference image is returned
     (score, diff) = compare_ssim(grayA, grayB, full=True)
+
+    cv2.imwrite(loc + '/diff.png', diff)
+    
+#    diff = grayA - grayB
+    
     diff = (diff * 255).astype("uint8")
 
     cv2.imwrite(loc + '/diff.png', diff)

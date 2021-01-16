@@ -35,6 +35,11 @@ image_format = '.png'
 
 
 
+
+
+
+
+
 def add_if_new(new_img, img_list = []):
     change_detected_flag = False
 
@@ -82,9 +87,9 @@ def create_file_name(directory, url):
     ext = tldextract.extract(url)
     domain = ext.domain
     
-    now = datetime.datetime.now()
-    date_stamp = str(datetime.date.today())
-    time_stamp = str(now.strftime("%H:%M:%S"))   
+    now = datetime.now()
+    date_stamp = str(now.strftime("%d_%b"))
+    time_stamp = str(now.strftime("%H_%M_%S"))   
 
     date_timestamp = date_stamp + '__' + time_stamp   
     
@@ -182,7 +187,7 @@ temp_file = os.path.join(scratch_dir, 'temp' + image_format)
 if debug:
     max_variations = 3
 else:
-    max_variations = 10
+    max_variations = 50
     
 
 
@@ -192,6 +197,7 @@ snapper.headless = True
 print('Adding variations')
 
 for variation in range(0, max_variations):
+    print('variation count', variation)
     for url, row in urls_df.iterrows():        
         if os.path.exists(temp_file):
           os.remove(temp_file)        
@@ -226,7 +232,7 @@ for variation in range(0, max_variations):
     if debug:
         continue
     else:
-        time.sleep(1)
+        time.sleep(2)
 
 
 
@@ -236,9 +242,51 @@ print_to_dir(baseline_image_dict, baseline_images_dir)
 
 
 
+
+
+###########################################################
+
+# Import requests (to download the page)
+import requests
+
+# Import BeautifulSoup (to parse what we download)
+from bs4 import BeautifulSoup
+
+
+# set the url as VentureBeat,
+soup_url = "https://selfregistration.uat.co-vin.in/selfregistration"
+# set the headers like we are a browser,
+headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+
+response = requests.get(soup_url, headers=headers)
+# parse the downloaded homepage and grab all text, then,
+soup_original = BeautifulSoup(response.text, "lxml")
+
+###########################################################
+
+
+
 print('started while loop')
 
+
+
 while(1):
+    
+    
+    #####################3
+    response = requests.get(soup_url, headers=headers)
+    # parse the downloaded homepage and grab all text, then,
+    soup_new = BeautifulSoup(response.text, "lxml")
+    
+    if soup_new.text != soup_original.text:
+        postman.send('trackerbot2020@gmail.com', subject = 'Soup Change' )        
+        pygame.mixer.init()
+        pygame.mixer.music.load("ringtone.mp3")
+        pygame.mixer.music.play(-1) 
+    #######################
+    
+    
+    
     temp_file = os.path.join(scratch_dir, 'temp' + image_format)
 
     for url, row in urls_df.iterrows():        
@@ -291,17 +339,16 @@ while(1):
                     filename = create_file_name(changed_images_folder, url)  
                     
                     if type(diff) is not str:
-                        pygame.mixer.init()
-                        pygame.mixer.music.load("ringtone.mp3")
-                        pygame.mixer.music.play(-1)
-                        
-                        
+
                         cv2.imwrite(filename, diff)
     
                         ext = tldextract.extract(url)
                         domain = ext.domain
                         postman.send('trackerbot2020@gmail.com', subject = 'Change > ' + domain, attachment = filename )
-                    
+                        
+                        pygame.mixer.init()
+                        pygame.mixer.music.load("ringtone.mp3")
+                        pygame.mixer.music.play(-1)                    
                     
                 else:
                     print('Shape Found in archive')
